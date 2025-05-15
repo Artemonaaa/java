@@ -38,7 +38,6 @@ public final class Main {
         }
         System.out.println(robocat);
 
-        // Використовуємо Map.of(...) для розкладу
         Man man = new Man("Ivan", "Ivanov", 1985, 90, Map.of(
                 DayOfWeek.MONDAY.name(), "Work",
                 DayOfWeek.TUESDAY.name(), "Fix car"
