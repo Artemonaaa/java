@@ -31,18 +31,24 @@ public class Human {
     }
 
     public void greetPet() {
-        if (family != null && family.getPet() != null) {
-            System.out.printf("Hello, %s\n", family.getPet().getNickname());
+        if (family != null && family.getPets() != null) {
+            for (Pet pet : family.getPets()) {
+                System.out.printf("Hello, %s\n", pet.getNickname());
+            }
         }
     }
 
+
     public void describePet() {
-        if (family != null && family.getPet() != null) {
-            Pet pet = family.getPet();
-            String slyness = pet.getTrickLevel() > 50 ? "Very tricky" : "Almost not tricky";
-            System.out.printf("I have %s, she is %d years old, he is %s\n", pet.getSpecies(), pet.getAge(), slyness);
+        if (family != null && family.getPets() != null && !family.getPets().isEmpty()) {
+            for (Pet pet : family.getPets()) {
+                String slyness = pet.getTrickLevel() > 50 ? "very tricky" : "almost not tricky";
+                System.out.printf("I have a %s, they are %d years old, and they are %s\n",
+                        pet.getSpecies(), pet.getAge(), slyness);
+            }
         }
     }
+
 
     public String getName() {
         return name;

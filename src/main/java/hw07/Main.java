@@ -49,7 +49,7 @@ public final class Main {
         ));
 
         Family family = new Family(woman, man);
-        family.setPet(dog);
+        family.addPet(dog);
 
         System.out.println("Woman greets pet:");
         woman.greetPet();

@@ -3,9 +3,13 @@ package hw7.test;
 import hw07.enums.DayOfWeek;
 import hw07.models.Family;
 import hw07.models.Humans.Human;
+import hw07.models.Pets.Dog;
+import hw07.models.Pets.DomesticCat;
+import hw07.models.Pets.Pet;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +56,39 @@ public class FamilyTest {
         assertFalse(result);
         assertEquals(3, family.countFamily());
     }
+
+    @Test
+    public void testAddMultiplePets() {
+        Family family = new Family(
+                new Human("Mom", "Catson", 1985),
+                new Human("Dad", "Catson", 1983)
+        );
+
+        Pet pet1 = new Dog("Rex", 3, 75, Set.of("bark", "fetch"));
+        Pet pet2 = new DomesticCat("Murka", 2, 60, Set.of("sleep", "purr"));
+
+        family.addPet(pet1);
+        family.addPet(pet2);
+
+        assertEquals(2, family.getPets().size());
+        assertTrue(family.getPets().contains(pet1));
+        assertTrue(family.getPets().contains(pet2));
+    }
+
+    @Test
+    public void testEqualsAndHashCode() {
+        Human mom1 = new Human("Alice", "Smith", 1980);
+        Human dad1 = new Human("Bob", "Smith", 1978);
+        Human mom2 = new Human("Alice", "Smith", 1980);
+        Human dad2 = new Human("Bob", "Smith", 1978);
+
+        Family family1 = new Family(mom1, dad1);
+        Family family2 = new Family(mom2, dad2);
+
+        assertEquals(family1, family2);
+        assertEquals(family1.hashCode(), family2.hashCode());
+    }
+
 
     @Test
     public void testToString() {

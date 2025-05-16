@@ -1,5 +1,7 @@
 package hw07.models.Humans;
 
+import hw07.models.Pets.Pet;
+
 import java.util.Map;
 
 public final class Woman extends Human {
@@ -9,8 +11,10 @@ public final class Woman extends Human {
 
     @Override
     public void greetPet() {
-        if (getFamily() != null && getFamily().getPet() != null) {
-            System.out.printf("Hi cute %s!\n", getFamily().getPet().getNickname());
+        if (getFamily() != null && getFamily().getPets() != null) {
+            for (Pet pet : getFamily().getPets()) {
+                System.out.printf("Hello brawny %s!\n", pet.getNickname());
+            }
         }
     }
 

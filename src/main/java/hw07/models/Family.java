@@ -3,20 +3,19 @@ package hw07.models;
 import hw07.models.Humans.Human;
 import hw07.models.Pets.Pet;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Family {
     private final Human mother;
     private final Human father;
     private final List<Human> children;
-    private Pet pet;
+    private final Set<Pet> pets;
 
     public Family(Human mother, Human father) {
         this.mother = mother;
         this.father = father;
         this.children = new ArrayList<>();
+        this.pets = new HashSet<>();
         mother.setFamily(this);
         father.setFamily(this);
     }
@@ -33,12 +32,16 @@ public class Family {
         return children;
     }
 
-    public Pet getPet() {
-        return pet;
+    public Set<Pet> getPets() {
+        return pets;
     }
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
+    public void addPet(Pet pet) {
+        this.pets.add(pet);
+    }
+
+    public void removePet(Pet pet) {
+        this.pets.remove(pet);
     }
 
     public void addChild(Human child) {
@@ -69,23 +72,22 @@ public class Family {
 
     @Override
     public String toString() {
-        return String.format("Family{mother=%s, father=%s, children=%s, pet=%s}",
-                mother, father, children, pet);
+        return String.format("Family{mother=%s, father=%s, children=%s, pets=%s}",
+                mother, father, children, pets);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Family)) return false;
-        Family family = (Family) o;
+        if (!(o instanceof Family family)) return false;
         return Objects.equals(mother, family.mother) &&
                 Objects.equals(father, family.father) &&
                 Objects.equals(children, family.children) &&
-                Objects.equals(pet, family.pet);
+                Objects.equals(pets, family.pets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mother, father, children, pet);
+        return Objects.hash(mother, father, children, pets);
     }
 }
