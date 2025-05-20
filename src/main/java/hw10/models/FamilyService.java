@@ -92,7 +92,7 @@ public class FamilyService {
             boolean isBoy = Math.random() < 0.5;
             String name = isBoy ? boyName : girlName;
             String surname = family.getFather().getSurname();
-            Human child = new Human(name, surname, 0); // новонароджена дитина, вік 0
+            Human child = new Human(name, surname, 0);
             family.getChildren().add(child);
         }
     }

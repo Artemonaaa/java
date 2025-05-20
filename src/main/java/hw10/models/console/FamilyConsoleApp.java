@@ -141,7 +141,6 @@ public class FamilyConsoleApp {
             System.out.print("IQ: ");
             int iq = Integer.parseInt(scanner.nextLine());
 
-            // Формуємо строку дати у форматі dd/MM/yyyy
             String birthDateStr = String.format("%02d/%02d/%04d", day, month, year);
 
             return new Human(name, surname, birthDateStr, iq);
