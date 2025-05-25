@@ -22,6 +22,15 @@ public class FamilyController {
         System.out.println("Тестові дані додано.");
     }
 
+    public void saveData() {
+        familyService.saveData();
+    }
+
+    public void loadData() {
+        familyService.loadData();
+        displayAllFamilies();
+    }
+
     public void displayAllFamilies() {
         List<Family> families = familyService.getAllFamilies();
         if (families.isEmpty()) {
@@ -105,14 +114,8 @@ public class FamilyController {
     }
 
     public void editFamily(Scanner scanner) {
-        System.out.print("Введіть індекс сім'ї для редагування: ");
-        int index = Integer.parseInt(scanner.nextLine()) - 1;
-
-        Family family = familyService.getFamilyByIndex(index);
-        if (family == null) {
-            System.out.println("Сім’я з таким індексом не знайдена.");
-            return;
-        }
+        int index = inputFamilyIndex(scanner);
+        if (index == -1) return;
 
         System.out.println("Редагування сім’ї:");
         System.out.println("1. Додати дитину (усиновлення)");
@@ -120,23 +123,46 @@ public class FamilyController {
         System.out.print("Ваш вибір: ");
         String choice = scanner.nextLine();
 
+        switch (choice) {
+            case "1" -> adoptChild(scanner, index);
+            case "2" -> bornChild(scanner, index);
+            default -> System.out.println("Невірний вибір. Будь ласка, оберіть 1 або 2.");
+        }
+    }
+
+    private int inputFamilyIndex(Scanner scanner) {
+        System.out.print("Введіть індекс сім'ї для редагування: ");
         try {
-            switch (choice) {
-                case "1" -> {
-                    Human child = inputHuman(scanner);
-                    familyService.adoptChild(index, child);
-                    System.out.println("Дитину додано до сім'ї.");
-                }
-                case "2" -> {
-                    System.out.print("Ім'я сина: ");
-                    String boyName = scanner.nextLine();
-                    System.out.print("Ім'я доньки: ");
-                    String girlName = scanner.nextLine();
-                    familyService.bornChild(index, boyName, girlName);
-                    System.out.println("Дитина народжена.");
-                }
-                default -> System.out.println("Невірний вибір. Будь ласка, оберіть 1 або 2.");
+            int index = Integer.parseInt(scanner.nextLine()) - 1;
+            if (familyService.getFamilyByIndex(index) == null) {
+                System.out.println("Сім’я з таким індексом не знайдена.");
+                return -1;
             }
+            return index;
+        } catch (NumberFormatException e) {
+            System.out.println("Некоректний індекс. Спробуйте ще раз.");
+            return -1;
+        }
+    }
+
+    private void adoptChild(Scanner scanner, int index) {
+        try {
+            Human child = inputHuman(scanner);
+            familyService.adoptChild(index, child);
+            System.out.println("Дитину додано до сім'ї.");
+        } catch (Exception e) {
+            System.out.println("Помилка при усиновленні: " + e.getMessage());
+        }
+    }
+
+    private void bornChild(Scanner scanner, int index) {
+        try {
+            System.out.print("Ім'я сина: ");
+            String boyName = scanner.nextLine();
+            System.out.print("Ім'я доньки: ");
+            String girlName = scanner.nextLine();
+            familyService.bornChild(index, boyName, girlName);
+            System.out.println("Дитина народжена.");
         } catch (FamilyOverflowException e) {
             System.out.println("Помилка: " + e.getMessage());
         }

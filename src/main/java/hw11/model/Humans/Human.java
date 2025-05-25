@@ -24,8 +24,7 @@ public class Human {
     public Human() {}
 
     public Human(String name, String surname, int year) {
-        this(name, surname, LocalDate.of(year, 1, 1)
-                .format(FORMATTER), 0, null);
+        this(name, surname, LocalDate.of(year, 1, 1).format(FORMATTER), 0, null);
     }
 
     public Human(String name, String surname, int year, int iq, Map<String, String> schedule) {
@@ -49,12 +48,26 @@ public class Human {
         return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    public String describeAge() {
-        LocalDate birth = Instant.ofEpochMilli(this.birthDate)
+    private LocalDate getBirthDateAsLocalDate() {
+        return Instant.ofEpochMilli(this.birthDate)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
-        Period age = Period.between(birth, LocalDate.now());
+    }
+
+    public String describeAge() {
+        Period age = calculateAge();
         return String.format("Age: %d years, %d months, %d days", age.getYears(), age.getMonths(), age.getDays());
+    }
+
+    private Period calculateAge() {
+        return Period.between(getBirthDateAsLocalDate(), LocalDate.now());
+    }
+
+    public int getBirthYear() {
+        return Instant.ofEpochMilli(this.birthDate)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .getYear();
     }
 
     public void greetPet() {
@@ -109,29 +122,18 @@ public class Human {
     }
 
     public int getAge() {
-        LocalDate birth = Instant.ofEpochMilli(this.birthDate)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        return Period.between(birth, LocalDate.now()).getYears();
+        return calculateAge().getYears();
     }
 
     public String prettyFormat() {
-        LocalDate birth = Instant.ofEpochMilli(this.birthDate)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        String birthDateStr = birth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         return String.format("{name='%s', surname='%s', birthDate='%s', iq=%d, schedule=%s}",
-                name, surname, birthDateStr, iq, schedule);
+                name, surname, getBirthDateAsLocalDate().format(FORMATTER), iq, schedule);
     }
 
     @Override
     public String toString() {
-        String birthDateStr = Instant.ofEpochMilli(birthDate)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-                .format(FORMATTER);
         return String.format("Human{name='%s', surname='%s', birthDate='%s', iq=%d, schedule=%s}",
-                name, surname, birthDateStr, iq, schedule);
+                name, surname, getBirthDateAsLocalDate().format(FORMATTER), iq, schedule);
     }
 
     @Override

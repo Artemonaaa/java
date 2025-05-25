@@ -1,5 +1,6 @@
 package hw11.service;
 
+import hw11.dao.FamilyDao;
 import hw11.model.Family;
 import hw11.model.Humans.Human;
 
@@ -11,10 +12,24 @@ import java.util.stream.Collectors;
 public class FamilyService {
     private final List<Family> families;
     private final List<Predicate<Family>> familyFilters;
+    private FamilyDao familyDao;
 
     public FamilyService() {
         this.families = new ArrayList<>();
         this.familyFilters = new ArrayList<>();
+        this.familyDao = new FamilyDao();
+    }
+
+    public void saveData() {
+        familyDao.saveData(families);
+        System.out.println("Дані збережено.");
+    }
+
+    public void loadData() {
+        List<Family> loadedFamilies = familyDao.loadData();
+        families.clear();
+        families.addAll(loadedFamilies);
+        System.out.println("Дані завантажено.");
     }
 
     public FamilyService(List<Family> families) {
