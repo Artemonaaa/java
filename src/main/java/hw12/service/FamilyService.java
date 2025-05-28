@@ -1,6 +1,6 @@
 package hw12.service;
 
-import hw12.dao.FamilyDao;
+import hw12.dao.CollectionFamilyDao;
 import hw12.model.Family;
 import hw12.model.Humans.Human;
 
@@ -10,31 +10,23 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FamilyService {
-    private final List<Family> families;
+    private final CollectionFamilyDao collectionFamilyDao;
     private final List<Predicate<Family>> familyFilters;
-    private FamilyDao familyDao;
 
     public FamilyService() {
-        this.families = new ArrayList<>();
+        this.collectionFamilyDao = new CollectionFamilyDao();
         this.familyFilters = new ArrayList<>();
-        this.familyDao = new FamilyDao();
     }
 
     public void saveData() {
-        familyDao.saveData(families);
+        collectionFamilyDao.saveData(collectionFamilyDao.getAllFamilies());
         System.out.println("Дані збережено.");
     }
 
     public void loadData() {
-        List<Family> loadedFamilies = familyDao.loadData();
-        families.clear();
-        families.addAll(loadedFamilies);
+        List<Family> loadedFamilies = collectionFamilyDao.loadData();
+        collectionFamilyDao.setFamilies(loadedFamilies);
         System.out.println("Дані завантажено.");
-    }
-
-    public FamilyService(List<Family> families) {
-        this.families = families;
-        this.familyFilters = new ArrayList<>();
     }
 
     public void addFamilyFilter(Predicate<Family> filter) {
@@ -42,53 +34,50 @@ public class FamilyService {
     }
 
     public List<Family> getFamiliesByFilters() {
-        return families.stream()
-                .filter(family -> familyFilters.stream().allMatch(filter -> filter.test(family)))
+        return collectionFamilyDao.getAllFamilies().stream()
+                .filter(family -> familyFilters.stream().allMatch(f -> f.test(family)))
                 .collect(Collectors.toList());
     }
 
     public List<Family> getFamiliesBiggerThan(int count) {
-        return families.stream()
-                .filter(family -> family.countFamily() >= count)
+        return collectionFamilyDao.getAllFamilies().stream()
+                .filter(f -> f.countFamily() >= count)
                 .collect(Collectors.toList());
     }
 
     public List<Family> getFamiliesLessThan(int count) {
-        return families.stream()
-                .filter(family -> family.countFamily() < count)
+        return collectionFamilyDao.getAllFamilies().stream()
+                .filter(f -> f.countFamily() < count)
                 .collect(Collectors.toList());
     }
 
     public long countFamiliesWithMemberNumber(int number) {
-        return families.stream()
-                .filter(family -> family.countFamily() == number)
+        return collectionFamilyDao.getAllFamilies().stream()
+                .filter(f -> f.countFamily() == number)
                 .count();
     }
 
     public void deleteAllChildrenOlderThan(int ageLimit) {
-        families.forEach(family -> family.getChildren()
-                .removeIf(child -> child.getAge() > ageLimit));
+        collectionFamilyDao.getAllFamilies().forEach(family ->
+                family.getChildren().removeIf(child -> child.getAge() > ageLimit)
+        );
     }
 
     public List<Family> getAllFamilies() {
-        return families;
+        return collectionFamilyDao.getAllFamilies();
     }
 
     public boolean deleteFamilyByIndex(int index) {
-        if (index >= 0 && index < families.size()) {
-            families.remove(index);
-            return true;
-        } else {
-            return false;
-        }
+        return collectionFamilyDao.deleteFamily(index);
     }
 
     public void createNewFamily(Human mother, Human father) {
-        Family newFamily = new Family(father, mother); // Ensure correct order: father first, mother second
-        families.add(newFamily);
+        Family newFamily = new Family(father, mother);
+        collectionFamilyDao.saveFamily(newFamily);
     }
 
     public Family getFamilyByIndex(int index) {
+        List<Family> families = collectionFamilyDao.getAllFamilies();
         if (index >= 0 && index < families.size()) {
             return families.get(index);
         }
@@ -114,6 +103,6 @@ public class FamilyService {
     }
 
     public void displayAllFamilies() {
-        families.forEach(System.out::println);
+        collectionFamilyDao.getAllFamilies().forEach(System.out::println);
     }
 }

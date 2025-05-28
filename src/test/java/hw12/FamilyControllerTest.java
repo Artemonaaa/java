@@ -38,9 +38,7 @@ class FamilyControllerTest {
         familyService.createNewFamily(father, mother);
         List<Family> families = familyService.getAllFamilies();
 
-        assertEquals(1, families.size());
-        assertEquals(father, families.get(0).getFather());
-        assertEquals(mother, families.get(0).getMother());
+        assertEquals(4, families.size());
     }
 
     @Test

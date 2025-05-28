@@ -7,8 +7,56 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FamilyDao {
+public class CollectionFamilyDao implements FamilyDAO<Family> {
     private static final String FILE_PATH = "src/main/resources/hw11/families.file";
+    private final List<Family> families;
+
+    public CollectionFamilyDao() {
+        families = loadData();
+    }
+
+    @Override
+    public List<Family> getAllFamilies() {
+        return new ArrayList<>(families);
+    }
+
+    @Override
+    public void setFamilies(List<Family> families) {
+        this.families.clear();
+        this.families.addAll(families);
+    }
+
+    @Override
+    public Family getFamilyByIndex(int index) {
+        if (index >= 0 && index < families.size()) {
+            return families.get(index);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteFamily(int index) {
+        if (index >= 0 && index < families.size()) {
+            families.remove(index);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteFamily(Family family) {
+        return families.remove(family);
+    }
+
+    @Override
+    public void saveFamily(Family family) {
+        int index = families.indexOf(family);
+        if (index >= 0) {
+            families.set(index, family);
+        } else {
+            families.add(family);
+        }
+    }
 
     public void saveData(List<Family> families) {
         File file = new File(FILE_PATH);
